@@ -15,7 +15,7 @@ var userProfileSchema = new mongoose.Schema({
     },
     gender:
     {
-        type:Boolean,
+        type:String,
     },
     personalno:{
         type: String,

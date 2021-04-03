@@ -156,19 +156,20 @@ module.exports.getprofile = (req, res, next) =>
         if (!userPro)
             return res.status(404).json({status: false, message: 'User record not found.' });
         else
-            return res.status(200).json({ status: true, userPro : _.pick(userPro,['address','gender','uploadedImage']) });
+            return res.status(200).json({ status: true, userPro : _.pick(userPro,['PersonalEmail','currentaddress','permanentaddress',
+            'permanentaddress','gender','personalno','alternativeNo','UserType','Tlassociated','Nominename','NominePhNumber','uploadedImage']) });
     }
 );
 }
 
 module.exports.upsertUserProfile= (req, res, next) =>
 {  
-    console.log(req.file);
-     console.log(req.body);
-     itemIds = [];
+    
+    if(!req.file)
+    {
+    //  itemIds = [];
     var userPro = new UserProfile();
     userid = req.body._id;
-    // userPro.userid = req.body.userid;
     userPro.PersonalEmail =req.body.PersonalEmail;
     userPro.currentaddress=req.body.currentaddress;
     userPro.permanentaddress=req.body.permanentaddress;
@@ -179,15 +180,8 @@ module.exports.upsertUserProfile= (req, res, next) =>
     userPro.Tlassociated = req.body.Tlassociated;
     userPro.Nominename = req.body.Nominename;
     userPro.NominePhNumber = req.body.NominePhNumber;
-    userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.file.filename;
-    // userPro.DocumentUpload=req.body.DocumentUpload;
-    // userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.files;
-   
-    // for (let i = 0; i < req.files.length; i++) 
-    // {
-    //     userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.files[i].filename;
-    // }
-    //  console.log(userPro.uploadedImage);
+    // userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.file.filename;
+  
       if(userid)
     {
      UserProfile.findOneAndUpdate({userid: userid},{$set:{ 
@@ -195,15 +189,15 @@ module.exports.upsertUserProfile= (req, res, next) =>
         PersonalEmail: userPro.PersonalEmail,
         currentaddress: userPro.currentaddress,
         permanentaddress: userPro.permanentaddress,
-        gender: userPro.gender,
+        gender:  userPro.gender,
         personalno: userPro.personalno,
         alternativeNo: userPro.alternativeNo,
         UserType: userPro.UserType,
         Tlassociated: userPro.Tlassociated,
         Nominename: userPro.Nominename,
         NominePhNumber: userPro.NominePhNumber,
-        // DocumentUpload: userPro.DocumentUpload,
-         uploadedImage: userPro.uploadedImage
+        // uploadedImage:'http://localhost:3000/uploads/'+ req.file.filename,
+       
     }}, {upsert: true}, (err, doc) => {
         if (!err) 
         {
@@ -212,7 +206,50 @@ module.exports.upsertUserProfile= (req, res, next) =>
        
     });
       }
-     
+    }
+
+    if(req.file)
+    {
+    //  itemIds = [];
+    var userPro = new UserProfile();
+    userid = req.body._id;
+    userPro.PersonalEmail =req.body.PersonalEmail;
+    userPro.currentaddress=req.body.currentaddress;
+    userPro.permanentaddress=req.body.permanentaddress;
+    userPro.gender=req.body.gender;
+    userPro.personalno=req.body.personalno;
+    userPro.alternativeNo=req.body.alternativeNo;
+    userPro.UserType=req.body.UserType;
+    userPro.Tlassociated = req.body.Tlassociated;
+    userPro.Nominename = req.body.Nominename;
+    userPro.NominePhNumber = req.body.NominePhNumber;
+     userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.file.filename;
+  
+      if(userid)
+    {
+     UserProfile.findOneAndUpdate({userid: userid},{$set:{ 
+       
+        PersonalEmail: userPro.PersonalEmail,
+        currentaddress: userPro.currentaddress,
+        permanentaddress: userPro.permanentaddress,
+        gender:  userPro.gender,
+        personalno: userPro.personalno,
+        alternativeNo: userPro.alternativeNo,
+        UserType: userPro.UserType,
+        Tlassociated: userPro.Tlassociated,
+        Nominename: userPro.Nominename,
+        NominePhNumber: userPro.NominePhNumber,
+         uploadedImage:'http://localhost:3000/uploads/'+ req.file.filename,
+    }}, {upsert: true}, (err, doc) => {
+        if (!err) 
+        {
+            res.send(doc);
+        }
+       
+    });
+      }
+    }
+
         
 }
 module.exports.upsertUserProfilepic= (req, res, next) =>
@@ -242,3 +279,11 @@ module.exports.upsertUserProfilepic= (req, res, next) =>
      
         
 }
+  // userPro.DocumentUpload=req.body.DocumentUpload;
+    // userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.files;
+   
+    // for (let i = 0; i < req.files.length; i++) 
+    // {
+    //     userPro.uploadedImage = 'http://localhost:3000/uploads/'+ req.files[i].filename;
+    // }
+    //  console.log(userPro.uploadedImage);
